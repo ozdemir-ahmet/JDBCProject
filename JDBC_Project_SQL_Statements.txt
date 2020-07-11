@@ -1,0 +1,43 @@
+create table employee (
+id int not null auto_increment primary key,
+name varchar(100) not null,
+lastName varchar(100) not null,
+phoneNumber varchar(15),
+phoneNumberICE varchar(15),
+dateOfBirth date,
+salary double);
+
+insert into employee (name, lastName, phoneNumber, dateOfBirth, salary)
+values ('Ahmet','Ozdemir','0488456456','1976-10-03',1500);
+
+insert into employee (name, lastName, phoneNumber, dateOfBirth, salary)
+values ('Patrick','Geudens','0488123123','1977-11-13',3500);
+
+insert into employee (name, lastName, phoneNumber, dateOfBirth, salary)
+values ('John','Ozdemir','0488678678','1997-01-30',2500);
+
+insert into employee (name, lastName, phoneNumber, dateOfBirth, salary)
+values ('Tonald','Drump','0489234234','1947-10-13',50);
+
+insert into employee (name, lastName, phoneNumber, dateOfBirth, salary)
+values ('David','Backpeperoni','0489349034','1947-07-09',2550);
+
+insert into employee (name, lastName, phoneNumber, dateOfBirth, salary)
+values ('Kevin','Koster','0489121212','1947-07-13',5000);
+
+create table project (
+id int not null auto_increment primary key,
+name varchar(100) not null,
+startDate date,
+description varchar(1000),
+price double,
+expectedEndDate date);
+
+insert into project (name, startDate, description, price, expectedEndDate)
+values ('Personel Management','2018-02-19','Personel Management System',20000,'2020-10-14');
+
+insert into project (name, startDate, description, price, expectedEndDate)
+values ('Logistic Management','2012-05-29','Logistic Management System',30000,'2017-12-04');
+
+
+
