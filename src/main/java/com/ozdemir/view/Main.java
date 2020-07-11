@@ -252,7 +252,7 @@ public class Main {
 
             if (subChoice == 4) {
                 //Update an employee
-                //I will select the record with PK: id
+                //select the record with PK: id
                 System.out.println("Please enter employee id: ");
                 int id = requestIntInput(1, Integer.MAX_VALUE);
 
@@ -321,8 +321,6 @@ public class Main {
                 } else {
                     System.out.println("Employee with id: " + id + " was not found in database.");
                 }
-
-
             }
 
             if (subChoice == 5) {
@@ -519,7 +517,78 @@ public class Main {
             }
             if (subChoice == 3) {
                 //3. Update work done
+                //select the record with two Foreign keys
+                System.out.println("Please enter employee id: ");
+                int employeeId = requestIntInput(1, Integer.MAX_VALUE);
+                System.out.println("Project id: ");
+                int projectId = requestIntInput(1, Integer.MAX_VALUE);
 
+                Optional<WorkDone> optionalWorkDone = null;
+                try {
+                    optionalWorkDone = workDoneService.getWorkDoneByFKs(employeeId,projectId);
+                } catch (SQLException e) {
+                    System.out.println("There is a problem with the database");
+                } catch (NonUniqueResultException e) {
+                    System.out.println(e.getMessage());
+                }
+                if (optionalWorkDone.isPresent()) {
+                    System.out.println(optionalWorkDone.get().toString() + "\nwill be updated");
+                    int choise;
+                    //until the user chooses 0 (exit), field changes will be kept and when 0 is selected db will be updated
+                    do {
+                        System.out.println("Which column do you want to update\n" +
+                                "Enter 0: Quit\n"+
+                                "Enter 1: update start of work\n"+
+                                "Enter 2: update end of work\n"+
+                                "Enter 3: update hours worked\n"+
+                                "Enter 4: update remarks\n"+
+                                ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                        choise = requestIntInput(0,4);
+                        switch (choise){
+                            case 1:
+                                System.out.println("Please enter the new start date of the work:");
+                                Date newStartOfWork = requestDate();
+                                Date projectStartDate = optionalWorkDone.get().getProject().getStartDate();
+                                Date projectEndDate = optionalWorkDone.get().getProject().getExpectedEndDate();
+                                while (newStartOfWork.before(projectStartDate) || newStartOfWork.after(projectEndDate)){
+                                    System.out.println("Date can not be before the start of the project: " + projectStartDate +
+                                            " or after the end of the project: " + projectEndDate);
+                                    System.out.println("Please enter a new start date of the work:");
+                                    newStartOfWork = requestDate();
+                                }
+                                optionalWorkDone.get().setStartOfWork(newStartOfWork);
+                                break;
+                            case 2:
+                                System.out.println("Please enter the new end date of the work:");
+                                Date newEndOfWork = requestDate();
+                                Date projectsStartDate = optionalWorkDone.get().getProject().getStartDate();
+                                Date projectsEndDate = optionalWorkDone.get().getProject().getExpectedEndDate();
+                                while (newEndOfWork.after(projectsEndDate) || newEndOfWork.before(projectsStartDate)){
+                                    System.out.println("Date can not be after the end of the project: " + projectsEndDate +
+                                            " or before the start of the project: " + projectsStartDate);
+                                    System.out.println("Please enter a new end date of the work:");
+                                    newEndOfWork = requestDate();
+                                }
+                                optionalWorkDone.get().setEndOfWork(newEndOfWork);
+                                break;
+                            case 3:
+                                System.out.println("Please enter the new hours worked:");
+                                int newHoursWorked = requestIntInput(0,Integer.MAX_VALUE);
+                                optionalWorkDone.get().setHoursWorked(newHoursWorked);
+                                break;
+                            case 4:
+                                System.out.println("Please enter the new remarks:");
+                                String newRemarks = requestStrInput();
+                                optionalWorkDone.get().setRemarks(newRemarks);
+                                break;
+                        }
+                    }while (choise != 0);
+                    try {
+                        workDoneService.updateWorkDone (optionalWorkDone.get());
+                    }catch (SQLException e){
+                        System.out.println("There is a problem with the database");
+                    }
+                }else System.out.println("No records found with the given employee and project pair");
             }
             if (subChoice == 4) {
                 //4. Delete work done
