@@ -67,6 +67,9 @@ public class Employee {
         this.salary = salary;
     }
 
+    public double calculateHourlyCost() {
+        return this.salary/(22*8);
+    }
     @Override
     public String toString() {
         return "Employee{" +
@@ -79,5 +82,4 @@ public class Employee {
                 ", salary=" + salary +
                 '}';
     }
-
 }

@@ -95,4 +95,27 @@ public class WorkDoneDAO {
 
         System.out.println(statement.executeUpdate()+" work done updated");
     }
+
+    public void deleteByFKs(int employeeId, int projectId) throws SQLException{
+        Connection connection = ConnectionFactory.getConnection();
+        PreparedStatement statement = connection.prepareStatement
+                ("DELETE from workDone where employeeId = ? AND projectId = ?");
+
+        statement.setInt(1, employeeId);
+        statement.setInt(2, projectId);
+
+        System.out.println(statement.executeUpdate() + " WorkDone deleted");
+    }
+
+    public List<WorkDone> getWorkDoneByProjctId(int projectId) throws SQLException{
+        Connection connection = ConnectionFactory.getConnection();
+
+        PreparedStatement statement = connection.prepareStatement(
+                "SELECT * FROM workDone WHERE projectId = ?");
+
+        statement.setInt(1,projectId);
+
+        ResultSet rs = statement.executeQuery();
+        return parseWorkDones(rs);
+    }
 }

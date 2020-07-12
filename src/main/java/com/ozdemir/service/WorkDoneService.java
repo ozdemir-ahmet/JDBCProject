@@ -31,4 +31,12 @@ public class WorkDoneService {
     public void updateWorkDone(WorkDone workDone) throws SQLException{
         workDoneDAO.updateWorkDone (workDone);
     }
+
+    public void deleteByFKs(int employeeId, int projectId) throws SQLException{
+        workDoneDAO.deleteByFKs (employeeId, projectId);
+    }
+
+    public List<WorkDone> getWorkDoneByProjectId(int projectId) throws SQLException{
+        return workDoneDAO.getWorkDoneByProjctId (projectId);
+    }
 }

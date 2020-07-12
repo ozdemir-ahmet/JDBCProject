@@ -5,6 +5,7 @@ import com.ozdemir.data.NonUniqueResultException;
 import com.ozdemir.data.ProjectDAO;
 import com.ozdemir.model.Employee;
 import com.ozdemir.model.Project;
+import com.ozdemir.model.Rantability;
 import com.ozdemir.model.WorkDone;
 import com.ozdemir.service.EmployeeService;
 import com.ozdemir.service.ProjectService;
@@ -13,10 +14,7 @@ import com.ozdemir.service.WorkDoneService;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -592,9 +590,77 @@ public class Main {
             }
             if (subChoice == 4) {
                 //4. Delete work done
+                System.out.println("Please enter employee id: ");
+                int employeeId = requestIntInput(1, Integer.MAX_VALUE);
+                System.out.println("Project id: ");
+                int projectId = requestIntInput(1, Integer.MAX_VALUE);
+
+                Optional<WorkDone> optionalWorkDone = null;
+                try {
+                    optionalWorkDone = workDoneService.getWorkDoneByFKs(employeeId,projectId);
+                } catch (SQLException e) {
+                    System.out.println("There is a problem with the database");
+                } catch (NonUniqueResultException e) {
+                    System.out.println(e.getMessage());
+                }
+
+                if (optionalWorkDone.isPresent()) {
+                    System.out.println(optionalWorkDone.get().toString() + "\nwill be deleted");
+                    System.out.println("Do you confirm : (y/n)");
+                    String choise;
+                    do{
+                        choise = requestStrInput();
+
+                        if (choise.toLowerCase().charAt(0) == 'n'){
+                            break;
+                        }
+
+                        if (choise.toLowerCase().charAt(0) == 'y'){
+                            try{
+                                workDoneService.deleteByFKs (employeeId, projectId);
+                            } catch (SQLException e){
+                                System.out.println("There is a problem with the database");
+                            }
+
+                        }
+                    }while (choise.toLowerCase().charAt(0) != 'n' && choise.toLowerCase().charAt(0) != 'y');
+                }else {
+                    System.out.println("Work Done with employee Id: " + employeeId + " and project Id: " + projectId + " was not found in database.");
+                }
+
             }
             if (subChoice == 5) {
                 //5. Show rantability of a given project
+                List<Rantability> rantabilities = new ArrayList<>();
+                ProjectService projectService = new ProjectService();
+                EmployeeService employeeService = new EmployeeService();
+                List<Project> allProjects = null;
+                try {
+                    allProjects = projectService.getAllProjects();
+
+                    for(int i = 0; i < allProjects.size();i++){
+                        Rantability r = new Rantability();
+                        r.setProjectId(allProjects.get(i).getId());
+                        r.setProjectPrice(allProjects.get(i).getPrice());
+                        rantabilities.add(r);
+                    }
+
+                    for (Rantability r : rantabilities){
+                        List<WorkDone> workDones = workDoneService.getWorkDoneByProjectId(r.getProjectId());
+                        double totalEmpCost = 0;
+                        for (WorkDone w : workDones){
+                            Optional<Employee> optEmployee = employeeService.getEmployeeById(w.getEmployeeId());
+                            totalEmpCost += (optEmployee.get().calculateHourlyCost() * w.getHoursWorked());
+                        }
+                        r.setTotalEmployeeCost(totalEmpCost);
+                        r.setRantability(r.getProjectPrice()-r.getTotalEmployeeCost());
+                        System.out.println(r.toString());
+                    }
+                }catch (SQLException e) {
+                    System.out.println("There is a problem with the database");
+                }catch (NonUniqueResultException ne) {
+                    System.out.println(ne.getMessage());
+                }
             }
             if (subChoice == 6) {
                 //6. Show top 3 employees in a given project

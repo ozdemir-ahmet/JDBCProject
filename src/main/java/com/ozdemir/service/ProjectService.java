@@ -6,6 +6,7 @@ import com.ozdemir.data.ProjectDAO;
 import com.ozdemir.model.Project;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 public class ProjectService {
@@ -21,5 +22,9 @@ public class ProjectService {
 
     public void deleteById(int id) throws SQLException{
         projectDAO.deleteById (id);
+    }
+
+    public List<Project> getAllProjects() throws SQLException{
+        return projectDAO.getAllProjects ();
     }
 }

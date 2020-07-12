@@ -3,10 +3,7 @@ package com.ozdemir.data;
 import com.ozdemir.model.Employee;
 import com.ozdemir.model.Project;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -66,4 +63,31 @@ public class ProjectDAO {
 
         System.out.println(statement.executeUpdate() + " project deleted");
     }
+
+    public List<Project> getAllProjects() throws SQLException{
+        Connection connection = ConnectionFactory.getConnection();
+
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery("SELECT * FROM project");
+
+        return parseProjects(rs);
+    }
+
+    private List<Project> parseProjects(ResultSet rs) throws SQLException {
+        List<Project> result = new ArrayList<>();
+        while (rs.next()) {
+            Project project = new Project();
+            project.setId(rs.getInt("id"));
+            project.setName(rs.getString("name"));
+            project.setStartDate(rs.getDate("startDate"));
+            project.setExpectedEndDate(rs.getDate("expectedEndDate"));
+            project.setDescription(rs.getString("description"));
+            project.setPrice(rs.getDouble("price"));
+
+            result.add(project);
+        }
+        return result;
+    }
+
+
 }
