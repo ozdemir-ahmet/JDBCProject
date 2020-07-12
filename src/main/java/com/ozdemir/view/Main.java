@@ -664,6 +664,22 @@ public class Main {
             }
             if (subChoice == 6) {
                 //6. Show top 3 employees in a given project
+
+                System.out.println("Please enter the project id: ");
+                int projectId= requestIntInput(1,Integer.MAX_VALUE);
+                try{
+                    List<WorkDone> topWorkDones = workDoneService.getTopWorkDonesByProjectId(projectId);
+                    if (!topWorkDones.isEmpty()){
+                        System.out.println("Top 3 Workers in project: " + topWorkDones.get(0).getProject().getName());
+                        for(WorkDone w : topWorkDones){
+                            System.out.println("Employee: " + w.getEmployee().getName() + " " + w.getEmployee().getLastName() + " Hours worked : " + w.getHoursWorked());
+                        }
+                    }
+                } catch (SQLException e){
+                    System.out.println("There is a problem with the database");
+                } catch (NonUniqueResultException ne){
+                    System.out.println(ne.getMessage());
+                }
             }
         }
     }

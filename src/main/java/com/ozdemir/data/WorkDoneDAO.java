@@ -6,6 +6,7 @@ import com.ozdemir.model.WorkDone;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -112,6 +113,18 @@ public class WorkDoneDAO {
 
         PreparedStatement statement = connection.prepareStatement(
                 "SELECT * FROM workDone WHERE projectId = ?");
+
+        statement.setInt(1,projectId);
+
+        ResultSet rs = statement.executeQuery();
+        return parseWorkDones(rs);
+    }
+
+    public List<WorkDone> getTopWorkDonesByProjectId(int projectId) throws SQLException, NonUniqueResultException{
+        Connection connection = ConnectionFactory.getConnection();
+
+        PreparedStatement statement = connection.prepareStatement(
+                "SELECT * FROM workDone WHERE projectId = ? ORDER BY hoursWorked DESC LIMIT 3");
 
         statement.setInt(1,projectId);
 
