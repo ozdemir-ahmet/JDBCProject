@@ -10,12 +10,12 @@ import java.util.Optional;
 public class EmployeeService {
     private EmployeeDAO employeeDAO = new EmployeeDAO();
 
-    public List<Employee> getEmployeeByLastName(String lastName) throws SQLException{
-        return employeeDAO.getEmployeeByLastName(lastName);
-    }
-
     public List<Employee> getAllEmployees() throws SQLException {
         return employeeDAO.getAllEmployees();
+    }
+
+    public List<Employee> getEmployeeByLastName(String lastName) throws SQLException{
+        return employeeDAO.getEmployeeByLastName(lastName);
     }
 
     public void saveEmployee(Employee employee) throws SQLException {
