@@ -39,5 +39,22 @@ values ('Personel Management','2018-02-19','Personel Management System',20000,'2
 insert into project (name, startDate, description, price, expectedEndDate)
 values ('Logistic Management','2012-05-29','Logistic Management System',30000,'2017-12-04');
 
+create table workDone (
+employeeId int not null,
+projectId int not null,
+startOfWork date,
+endOfWork date,
+hoursWorked int,
+remarks varchar (255),
+CONSTRAINT FK_EmployeeId FOREIGN KEY (employeeId) REFERENCES employee(id),
+CONSTRAINT FK_ProjectId FOREIGN KEY (projectId) REFERENCES project(id));
 
 
+insert into workDone values (1,1,'2019-10-13','2020,06-24',80,'None');
+insert into workDone values (2,1,'2020-01-18','2020,06-24',43,'None');
+insert into workDone values (3,1,'2019-12-10','2020,11-27',60,'None');
+insert into workDone values (4,1,'2020-01-03','2020,06-27',56,'None');
+insert into workDone values (1,2,'2012-10-13','2015,06-24',70,'None');
+insert into workDone values (3,2,'2014-01-18','2016,06-24',63,'None');
+insert into workDone values (4,2,'2015-03-18','2017,11-24',106,'None');
+insert into workDone values (5,2,'2016-04-18','2017,06-12',85,'None');
